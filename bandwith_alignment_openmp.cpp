@@ -8,7 +8,7 @@
 using namespace std;
 
 constexpr int MAXN = 1e7;
-constexpr int BANDWIDTH = 1e2;
+constexpr int BANDWIDTH = 1e3;
 constexpr int ninf = -0x7f7f7f7f;
 static char A[MAXN], B[MAXN];
 #define DP_TYPE int
@@ -22,13 +22,29 @@ int bio_match(const char *A, int na, const char *B, int nb) {
     int last_l = 0, last_r = 0;
     dp[0][0] = 0;
     dp[1][1] = dp[1][0] = shift;
+    int reduce = 0;
     for (int i = 0; i < na + nb - 1; i++) {
-        int l = min(max(0, i - min(na, BANDWIDTH) + 1), nb - 1), r = min(min(i, l + BANDWIDTH - 1), nb - 1);
+        int l = max(0, i - min(na, BANDWIDTH) + 1), r = min(i, nb - 1);
+        int rr = r;
+        if (i >= BANDWIDTH) {
+            reduce += (i % 2 == 1);
+            l -= reduce, r -= reduce;
+            // 1 2 3 4 5 6 7 8
+            // 1 1 2 2 3 3 4 4
+            // 0 1 1 2 2 3 3 4
+        }
+        l = min(l, max(rr - BANDWIDTH, 0));
+        if (i >= BANDWIDTH)
+            r = l + BANDWIDTH;
+
         // int l = max(0, i - na + 1), r = min(i, nb - 1);
+        // cout << "l: " << l << ", r: " << r << "\n";
         if (i < BANDWIDTH)
             dp[2][r + 2] = dp[2][0] = (i + 2) * shift;
-        else
+        else {
+            // l = min(l + 1, )
             dp[2][r + 2] = dp[2][l] = ninf;
+        }
 #pragma omp parallel for schedule(static) firstprivate(na, A, B)
         for (int j = l; j <= r; j++) {
             int x = i - j, y = j;
@@ -37,6 +53,9 @@ int bio_match(const char *A, int na, const char *B, int nb) {
                 dp[2][j + 1],
                 (dp[1][j] > dp[1][j + 1] ? dp[1][j] : dp[1][j + 1]) + shift);
         }
+        // for (int z = 0; z < 10; z++)
+        //     cout << dp[2][z] << " ";
+        // cout << "\n";
         memcpy(dp[0] + last_l, dp[1] + last_l,
                sizeof(DP_TYPE) * (last_r - last_l + 3));
         memcpy(dp[1] + l, dp[2] + l, sizeof(DP_TYPE) * (r - l + 3));

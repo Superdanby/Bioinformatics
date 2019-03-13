@@ -13,9 +13,9 @@ test_affine_gap_openmp: affine_gap_openmp
 bandwith_alignment_openmp: bandwith_alignment_openmp.cpp
 	g++ -std=c++17 bandwith_alignment_openmp.cpp -O3 -fopenmp -o bandwith_alignment_openmp
 test_bandwith_alignment_openmp: bandwith_alignment_openmp
-	./bandwith_alignment_openmp <<< "ACACA AAA"
-	./bandwith_alignment_openmp <<< "ACAGAT GCAGAC"
-	./bandwith_alignment_openmp < gap1.dat
-	./bandwith_alignment_openmp < gap2.dat
-	./bandwith_alignment_openmp < gap3.dat
-	./bandwith_alignment_openmp < gap4.dat
+	time ./bandwith_alignment_openmp <<< "ACACA AAA"
+	time ./bandwith_alignment_openmp <<< "ACAGAT GCAGAC"
+	time ./bandwith_alignment_openmp < gap1.dat
+	time ./bandwith_alignment_openmp < gap2.dat
+	time ./bandwith_alignment_openmp < gap3.dat
+	time ./bandwith_alignment_openmp < gap4.dat
