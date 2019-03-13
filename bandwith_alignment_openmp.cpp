@@ -23,7 +23,7 @@ int bio_match(const char *A, int na, const char *B, int nb) {
     dp[0][0] = 0;
     dp[1][1] = dp[1][0] = shift;
     for (int i = 0; i < na + nb - 1; i++) {
-        int l = min(max(0, i - min(na, BANDWIDTH) + 1), nb - 1), r = min(i, nb - 1);
+        int l = min(max(0, i - min(na, BANDWIDTH) + 1), nb - 1), r = min(min(i, l + BANDWIDTH - 1), nb - 1);
         // int l = max(0, i - na + 1), r = min(i, nb - 1);
         if (i < BANDWIDTH)
             dp[2][r + 2] = dp[2][0] = (i + 2) * shift;
