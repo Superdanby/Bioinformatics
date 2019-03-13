@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const int MAXN = 7;
+const int MAXN = 1e7;
 static char A[MAXN], B[MAXN];
 #define DP_TYPE int
 const int match = 8, miss = -5, shift = -3;
