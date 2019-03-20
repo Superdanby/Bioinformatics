@@ -8,7 +8,7 @@
 using namespace std;
 
 constexpr int MAXN = 1e7;
-constexpr int BANDWIDTH = 1e4;
+constexpr int BANDWIDTH = 1e3;
 constexpr int ninf = -0x7f7f7f7f;
 static char A[MAXN], B[MAXN];
 #define DP_TYPE int
@@ -23,9 +23,10 @@ int bio_match(const char *A, int na, const char *B, int nb) {
     omp_set_num_threads(nthreads);
     int last_l = 0, last_r = 0;
     dp[0][0] = 0;
-    dp[1][1] = dp[1][0] = shift;
-    D[0][0] = D[1][1] = D[1][0] = ninf;
-    I[0][0] = I[1][1] = I[1][0] = ninf;
+    dp[1][1] = dp[1][0] = shift + open_gap;
+    D[0][0] = I[0][0] = ninf;
+    D[1][1] = D[1][0] = shift + open_gap;
+    I[1][1] = I[1][0] = shift + open_gap;
     int reduce = 0;
     for (int i = 0; i < na + nb - 1; i++) {
         int l = max(0, i - min(na, BANDWIDTH) + 1), r = min(i, nb - 1);
@@ -33,23 +34,16 @@ int bio_match(const char *A, int na, const char *B, int nb) {
         if (i >= BANDWIDTH) {
             reduce += (i % 2 == 1);
             l -= reduce, r -= reduce;
-            // 1 2 3 4 5 6 7 8
-            // 1 1 2 2 3 3 4 4
-            // 0 1 1 2 2 3 3 4
         }
         l = min(l, max(rr - BANDWIDTH, 0));
         if (i >= BANDWIDTH)
             r = l + BANDWIDTH;
-
-        // int l = max(0, i - na + 1), r = min(i, nb - 1);
-        // cout << "l: " << l << ", r: " << r << "\n";
         if (i < BANDWIDTH) {
-            dp[2][r + 2] = dp[2][0] = (i + 2) * shift;
-            D[2][r + 2] = D[2][0] = ninf;
-            I[2][r + 2] = I[2][0] = ninf;
+            dp[2][r + 2] = dp[2][0] = (i + 2) * shift + open_gap;
+            D[2][r + 2] = D[2][0] = (i + 2) * shift + open_gap;
+            I[2][r + 2] = I[2][0] = (i + 2) * shift + open_gap;
         }
         else {
-            // l = min(l + 1, )
             dp[2][r + 2] = dp[2][l] = ninf;
             D[2][r + 2] = D[2][l] = ninf;
             I[2][r + 2] = I[2][l] = ninf;
@@ -64,7 +58,7 @@ int bio_match(const char *A, int na, const char *B, int nb) {
                 dp[2][j + 1], max(D[2][j + 1], I[2][j + 1]));
         }
         // for (int z = 0; z < 10; z++)
-        //     cout << dp[2][z] << " ";
+        //     cout << I[2][z] << " ";
         // cout << "\n";
         memcpy(dp[0] + last_l, dp[1] + last_l,
                sizeof(DP_TYPE) * (last_r - last_l + 3));
