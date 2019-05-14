@@ -1,0 +1,3 @@
+[submodule "xsimd"]
+	path = xsimd
+	url = git@github.com:QuantStack/xsimd.git
