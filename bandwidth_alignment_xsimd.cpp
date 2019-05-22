@@ -12,7 +12,7 @@ using vector_int = std::vector<int, xsimd::aligned_allocator<int, XSIMD_DEFAULT_
 namespace xs = xsimd;
 
 constexpr int MAXN = 1e7;
-constexpr int BANDWIDTH = 1e3;
+constexpr int BANDWIDTH = 1e6;
 constexpr int ninf = -0x7f7f7f7f;
 // static char A[MAXN], B[MAXN];
 #define DP_TYPE int

@@ -8,17 +8,15 @@
 using namespace std;
 
 constexpr int MAXN = 1e7;
-constexpr int BANDWIDTH = 1e3;
+constexpr int BANDWIDTH = 1e5;
 constexpr int ninf = -0x7f7f7f7f;
 static char A[MAXN], B[MAXN];
 #define DP_TYPE int
 constexpr int match = 8, miss = -5, shift = -3;
-const int nthreads = std::thread::hardware_concurrency() > 1 ? std::thread::hardware_concurrency() - 1 : 1;
 
 int bio_match(const char *A, int na, const char *B, int nb) {
     if (na > nb) swap(A, B), swap(na, nb);
     static DP_TYPE dp[3][MAXN];
-    omp_set_num_threads(nthreads);
     int last_l = 0, last_r = 0;
     dp[0][0] = 0;
     dp[1][1] = dp[1][0] = shift;
@@ -45,7 +43,6 @@ int bio_match(const char *A, int na, const char *B, int nb) {
             // l = min(l + 1, )
             dp[2][r + 2] = dp[2][l] = ninf;
         }
-#pragma omp parallel for schedule(static) firstprivate(na, A, B)
         for (int j = l; j <= r; j++) {
             int x = i - j, y = j;
             dp[2][j + 1] = dp[0][j] + (A[x] == B[y] ? match : miss);
