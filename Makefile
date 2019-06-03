@@ -72,3 +72,24 @@ test_bandwidth_alignment_openmp_simd_parallel: bandwidth_alignment_openmp_simd_p
 	time ./bandwidth_alignment_openmp_simd_parallel < test1.dat
 	time ./bandwidth_alignment_openmp_simd_parallel < test2.dat
 	time ./bandwidth_alignment_openmp_simd_parallel < test3.dat
+final_project: final_project.cpp
+	# g++ -std=c++17 final_project.cpp -O2 -o final_project
+	g++ -std=c++17 final_project.cpp -O3 -march=native -fopenmp -fopt-info-optall -o final_project
+test_final_project: final_project
+	time ./final_project <<< "ACACA AAA"
+	time ./final_project <<< "ACAGAT GCAGAC"
+	time ./final_project < gap1.dat
+	time ./final_project < gap2.dat
+	time ./final_project < gap3.dat
+	time ./final_project < gap4.dat
+	time ./final_project < test1.dat
+	time ./final_project < test2.dat
+	time ./final_project < test3.dat
+exe_final_project: final_project
+	time ./final_project < T10.dat
+	time ./final_project < T100.dat
+	time ./final_project < T1000.dat
+exe_final_project_to_file: final_project
+	time ./final_project < T10.dat > T10.out
+	time ./final_project < T100.dat > T100.out
+	time ./final_project < T1000.dat > T1000.out
