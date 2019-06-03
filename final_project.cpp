@@ -136,30 +136,31 @@ int main() {
     }
     vector<ll> result(pool.size() * (pool.size() - 1) / 2);
     size_t idx = 0;
-    ll ans_max = 0, ans_min = 1e18;
+    // ll ans_max = 0, ans_min = 1e18;
 #pragma omp parallel for
     for (size_t i = 0; i < pool.size(); ++i)
+#pragma omp parallel for
         for (size_t j = i + 1; j < pool.size(); ++j)
         {
             // result[i * pool.size() + j - i - i * (i + 1) / 2 - 1 = bio_match_c(pool[i].c_str(), pool[i].length(), pool[j].c_str(), pool[j].length());
-            auto value = bio_match_cpp(pool[i], pool[j]);
-            // result[i * pool.size() + j - i - i * (i + 1) / 2 - 1] = bio_match_cpp(pool[i], pool[j]);
-            ans_min = min(ans_min, ll(value));
-            ans_max = max(ans_max, ll(value));
+            // auto value = bio_match_cpp(pool[i], pool[j]);
+            result[i * pool.size() + j - i - i * (i + 1) / 2 - 1] = bio_match_cpp(pool[i], pool[j]);
+            // ans_min = min(ans_min, ll(value));
+            // ans_max = max(ans_max, ll(value));
             // cerr << i << " " << j << ": " << result[i * pool.size() + j - i - i * (i + 1) / 2 - 1] << "\n";
             // cerr << "idx: " << idx << ", i: " << i << ", j: " << j << ", res: " << i * pool.size() + j - i - i * (i + 1) / 2 - 1 << "\n";
             // assert(idx++ == i * pool.size() + j - i - i * (i + 1) / 2 - 1);
             // ++idx;
         }
-    // ll ans_max = 0, ans_min = 1e18;
-    // idx = 0;
-    // for (size_t i = 0; i < pool.size(); ++i)
-    //     for (size_t j = i + 1; j < pool.size(); ++j)
-    //     {
-    //         ans_min = min(ans_min, ll(result[i * pool.size() + j - i - i * (i + 1) / 2 - 1]));
-    //         ans_max = max(ans_max, ll(result[i * pool.size() + j - i - i * (i + 1) / 2 - 1]));
-    //         cout << i << " " << j << ": " << result[i * pool.size() + j - i - i * (i + 1) / 2 - 1] << "\n";
-    //     }
+    ll ans_max = 0, ans_min = 1e18;
+    idx = 0;
+    for (size_t i = 0; i < pool.size(); ++i)
+        for (size_t j = i + 1; j < pool.size(); ++j)
+        {
+            ans_min = min(ans_min, ll(result[i * pool.size() + j - i - i * (i + 1) / 2 - 1]));
+            ans_max = max(ans_max, ll(result[i * pool.size() + j - i - i * (i + 1) / 2 - 1]));
+            cout << i << " " << j << ": " << result[i * pool.size() + j - i - i * (i + 1) / 2 - 1] << "\n";
+        }
     cout << "MAX: " << ans_max << "\n"
         << "min: " << ans_min << "\n";
     return 0;
