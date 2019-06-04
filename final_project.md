@@ -79,6 +79,10 @@ Solution: Restrict the size of dynamic programming calculations with bandwidth.
 
 Bandwidth restriction down side: minimum score may be compromised.
 
+## Copying Dynamic Programming Table Takes Too Long
+
+Solution: Use swap instead of copy.
+
 ## Potential Improvements
 
 ### GPU acceleration
