@@ -53,18 +53,8 @@ int bio_match_cpp(string &a, string &b) {
             *it_2 = (it_shift > *it_2 ? it_shift : *it_2);
             ++j, ++it_1, ++it_11, ++it_0, --it_a, ++it_b;
         }
-        // for (int j = l; j <= r; j++) {
-        //     int x = i - j, y = j;
-        //     dp[2][j + 1] = dp[0][j] + (A[x] == B[y] ? match : miss);
-        //     dp[2][j + 1] = max(
-        //         dp[2][j + 1],
-        //         (dp[1][j] > dp[1][j + 1] ? dp[1][j] : dp[1][j + 1]) + shift);
-        // }
-        // for (int z = 0; z < 10; z++)
-        //     cout << dp[2][z] << " ";
-        // cout << "\n";
-        dp[0].swap(dp[1]); // answer is wrong
-        dp[1].swap(dp[2]); // answer is wrong
+        dp[0].swap(dp[1]);
+        dp[1].swap(dp[2]);
         // copy(dp[1].begin() + last_l, dp[1].begin() + last_r + 3, dp[0].begin() + last_l);
         // copy(dp[2].begin() + l, dp[2].begin() + r + 3, dp[1].begin() + l);
         last_l = l, last_r = r;
@@ -143,14 +133,7 @@ int main() {
         for (size_t j = i + 1; j < pool.size(); ++j)
         {
             // result[i * pool.size() + j - i - i * (i + 1) / 2 - 1 = bio_match_c(pool[i].c_str(), pool[i].length(), pool[j].c_str(), pool[j].length());
-            // auto value = bio_match_cpp(pool[i], pool[j]);
             result[i * pool.size() + j - i - i * (i + 1) / 2 - 1] = bio_match_cpp(pool[i], pool[j]);
-            // ans_min = min(ans_min, ll(value));
-            // ans_max = max(ans_max, ll(value));
-            // cerr << i << " " << j << ": " << result[i * pool.size() + j - i - i * (i + 1) / 2 - 1] << "\n";
-            // cerr << "idx: " << idx << ", i: " << i << ", j: " << j << ", res: " << i * pool.size() + j - i - i * (i + 1) / 2 - 1 << "\n";
-            // assert(idx++ == i * pool.size() + j - i - i * (i + 1) / 2 - 1);
-            // ++idx;
         }
     ll ans_max = 0, ans_min = 1e18;
     idx = 0;
